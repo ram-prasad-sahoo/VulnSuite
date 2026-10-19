@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Shadow Corp{% endblock %} — Shadow Corp</title>
-  <meta name="description" content="Shadow Corp — Enterprise Portal" />
+  <title>{% block title %}VulnSuite{% endblock %} — VulnSuite Enterprise</title>
+  <meta name="description" content="VulnSuite — Enterprise Operations Platform" />
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -16,8 +17,8 @@
   <nav class="navbar">
     <div class="nav-inner">
       <a href="{{ url_for('index') }}" class="nav-brand">
-        <span class="brand-icon">◈</span>
-        <span class="brand-name">Shadow Corp</span>
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="VulnSuite Logo" class="brand-logo" width="28" height="28" style="vertical-align: middle; margin-right: 8px;" />
+        <span class="brand-name">VulnSuite</span>
         <span class="brand-pill">Enterprise v3.2</span>
       </a>
 
@@ -68,7 +69,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>© 2026 Shadow Corp Technologies, Inc. &nbsp;·&nbsp; Internal Operations Portal &nbsp;·&nbsp; <span class="footer-badge">Educational Lab</span></p>
+    <p>© 2026 VulnSuite Technologies, Inc. &nbsp;·&nbsp; Enterprise Operations Platform &nbsp;·&nbsp; <span class="footer-badge">Educational Lab</span></p>
   </footer>
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>

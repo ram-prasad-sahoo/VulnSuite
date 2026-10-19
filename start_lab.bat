@@ -2,7 +2,7 @@
 setlocal
 
 echo =========================================
-echo       Shadow Corp Lab Startup Script
+echo       VulnSuite Lab Startup Script
 echo =========================================
 echo.
 
@@ -26,7 +26,7 @@ echo [*] Docker is running!
 
 echo [*] Starting docker-compose in a new window...
 :: Launch docker-compose in a new command prompt window so this script can continue
-start "Shadow Corp Lab Server" cmd /c "docker-compose up --build"
+start "VulnSuite Lab Server" cmd /c "docker-compose up --build"
 
 echo [*] Waiting 10 seconds for the Flask server and database to spin up...
 timeout /t 10 /nobreak >nul

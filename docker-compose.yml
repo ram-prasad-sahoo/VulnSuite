@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════════
-# Shadow Corp — Docker Compose
+# VulnSuite — Docker Compose
 # Spin up the entire lab with: docker-compose up --build
 # ═══════════════════════════════════════════════════════════════════════════
 #
@@ -7,7 +7,7 @@
 #    Do NOT expose to the internet. Local classroom use only.
 #
 # Services:
-#   backend      → Flask app on host:5000
+#   backend      → Flask app on host:9999
 #   internal-api → Node.js secret API (internal network ONLY — no host port)
 #
 # Vulnerability toggles (all ON by default):
@@ -28,7 +28,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: shadowcorp-backend
+    container_name: vulnsuite-backend
     restart: unless-stopped
     ports:
       - "9999:5000"           # Exposed to host for classroom access
@@ -37,7 +37,7 @@ services:
       - ./seed:/seed          # Seed script accessible at /seed/seed.py
     environment:
       FLASK_DEBUG: "true"
-      SECRET_KEY: "shadow-corp-insecure-dev-key-DO-NOT-USE"
+      SECRET_KEY: "vulnsuite-insecure-dev-key-DO-NOT-USE"
       DATABASE: "/app/LabDatabase.db"
       INTERNAL_API_URL: "http://internal-api:3000"
 
@@ -54,6 +54,7 @@ services:
       VULN_RCE:            "${VULN_RCE:-true}"
     networks:
       - lab-net
+      - default
     depends_on:
       - internal-api
 
@@ -62,7 +63,7 @@ services:
     build:
       context: ./internal-api
       dockerfile: Dockerfile
-    container_name: shadowcorp-internal-api
+    container_name: vulnsuite-internal-api
     restart: unless-stopped
     # ⚠ NO ports: mapping — this service is intentionally NOT exposed to host.
     # It is only reachable via the Docker internal network (by the backend
