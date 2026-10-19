@@ -189,7 +189,7 @@ Before installing VulnSuite, ensure your machine satisfies either **Option A (Do
 Open your terminal or command prompt and clone the VulnSuite repository:
 
 ```bash
-git clone https://github.com/<YOUR_GITHUB_USERNAME>/VulnSuite.git
+git clone https://github.com/ram-prasad-sahoo/VulnSuite.git
 cd VulnSuite
 ```
 
