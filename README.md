@@ -9,25 +9,20 @@
 
 <p align="center">
   <a href="https://www.linkedin.com/in/ramprasadsahoo/"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Connect" /></a>
-  <img src="https://img.shields.io/badge/Version-3.2_Enterprise-blue?style=for-the-badge" alt="Version 3.2" />
+  <img src="https://img.shields.io/badge/Version-1.0-blue?style=for-the-badge" alt="Version 1.0" />
   <img src="https://img.shields.io/badge/License-Educational-brightgreen?style=for-the-badge" alt="License" />
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
 </p>
 
 ---
 
-> ⚠️ **DISCLAIMER & EDUCATIONAL USE NOTICE**  
-> **VulnSuite** is designed strictly for authorized educational research, training, and vulnerability assessment demonstrations. Never deploy this application on a public or untrusted network.
-
----
-
 ## 🏢 Platform & Business Logic Overview
 
-**VulnSuite Enterprise** simulates a multi-tier Corporate Operations and ERP portal used by internal employees, billing departments, and platform administrators.
+**VulnSuite** simulates a multi-tier Corporate Operations and ERP portal used by internal employees, billing departments, and platform administrators.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        VulnSuite Enterprise v3.2                       │
+│                             VulnSuite v1.0                             │
 ├───────────────────┬──────────────────────┬─────────────────────────────┤
 │ User Management   │ Financial & Invoices │ Document & Knowledge Base   │
 │ • Staff Directory │ • Client Billing     │ • Incident Report Uploads   │
@@ -192,6 +187,9 @@ Crafted by **Ramprasad Sahoo**. Connect on LinkedIn for discussions, feedback, o
 
 ---
 
+> ⚠️ **DISCLAIMER & EDUCATIONAL USE NOTICE**  
+> **VulnSuite** is designed strictly for authorized educational research, training, and vulnerability assessment demonstrations. Never deploy this application on a public or untrusted network.
+
 <p align="center">
-  <sub>VulnSuite Enterprise © 2026. Built for cybersecurity education, research, and security benchmarking.</sub>
+  <sub>VulnSuite v1.0 © 2026. Built for cybersecurity education, research, and security benchmarking.</sub>
 </p>
