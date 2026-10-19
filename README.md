@@ -162,12 +162,20 @@ The seed script creates the following user accounts:
 ### Prerequisites
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Docker Compose v2+) or Python 3.11+
 
-### Option A: One-Click Startup (Windows)
-Double-click `start_lab.bat` or run in PowerShell:
-```powershell
-.\start_lab.bat
-```
-This script validates Docker execution, initializes the multi-container stack, and automatically opens `http://localhost:9999` in your default browser.
+### Option A: One-Click Startup Scripts
+
+* **Windows**: Double-click `start_lab.bat` or execute in PowerShell:
+  ```powershell
+  .\start_lab.bat
+  ```
+
+* **Linux & macOS**: Make executable and run in your terminal:
+  ```bash
+  chmod +x start_lab.sh
+  ./start_lab.sh
+  ```
+
+These scripts verify that Docker daemon is running, build and initialize the container stack, and automatically open `http://localhost:9999` in your default browser.
 
 ---
 
@@ -254,6 +262,7 @@ VulnSuite/
 ├── docker-compose.yml          # Container configuration and network bridge
 ├── logo.svg                    # Vector graphic identity
 ├── start_lab.bat               # Windows automation launcher
+├── start_lab.sh                # Linux & macOS automation launcher
 │
 ├── backend/                    # Core Flask Application
 │   ├── app.py                  # Application factory and middleware
