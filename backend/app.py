@@ -97,5 +97,5 @@ if __name__ == "__main__":
     # still means requests can block each other briefly, but with
     # threaded=True + the deliberate time.sleep() in the vulnerable branch,
     # the check-then-act window is wide enough that firing ~15-20
-    # concurrent requests reliably wins the race in a classroom demo.
-    app.run(host="0.0.0.0", port=5000, debug=app.config["DEBUG"], threaded=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=app.config["DEBUG"], threaded=True)

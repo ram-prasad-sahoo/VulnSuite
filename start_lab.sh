@@ -1,73 +1,127 @@
 #!/usr/bin/env bash
-# =========================================
-#       VulnSuite Lab Startup Script
-#        (Linux & macOS Quick Start)
-# =========================================
+# ===================================================
+#             VulnSuite Lab Startup
+#           (Linux & macOS Quick Start)
+# ===================================================
 
 set -e
 
 # Detect operating system
 OS="$(uname -s)"
 
-echo "========================================="
-echo "      VulnSuite Lab Startup Script       "
-echo "========================================="
+echo "==================================================="
+echo "              VulnSuite Lab Startup                "
+echo "==================================================="
 echo ""
 
-# 1. Check if Docker is installed
-if ! command -v docker >/dev/null 2>&1; then
-    echo "[!] Docker is not installed."
-    echo "[!] Please install Docker / Docker Desktop before running this lab."
-    exit 1
-fi
-
-# 2. Check if Docker daemon is running
-echo "[*] Checking if Docker daemon is running..."
-if ! docker info >/dev/null 2>&1; then
-    echo "[!] Docker daemon is not running."
-    echo "[!] Please start Docker Desktop or the docker service (e.g. 'sudo systemctl start docker')."
-    echo "[*] Waiting for Docker to start..."
-    while ! docker info >/dev/null 2>&1; do
-        sleep 3
-        echo "    ...still waiting for Docker..."
-    done
-fi
-
-echo "[*] Docker is running!"
-
-# 3. Determine compose command ('docker compose' vs 'docker-compose')
-if docker compose version >/dev/null 2>&1; then
-    COMPOSE_CMD="docker compose"
-elif command -v docker-compose >/dev/null 2>&1; then
-    COMPOSE_CMD="docker-compose"
-else
-    echo "[!] Neither 'docker compose' nor 'docker-compose' was found."
-    exit 1
-fi
-
-# 4. Build and start containers in the background
-echo "[*] Launching containers via '$COMPOSE_CMD'..."
-$COMPOSE_CMD up --build -d
-
-echo "[*] Waiting 6 seconds for the web server and database to spin up..."
-sleep 6
-
-# 5. Open browser automatically
 URL="http://localhost:9999"
-echo "[*] Opening the lab in your default web browser ($URL)..."
-if [ "$OS" = "Darwin" ]; then
-    open "$URL" >/dev/null 2>&1 || true
-elif [ "$OS" = "Linux" ]; then
-    if command -v xdg-open >/dev/null 2>&1; then
-        xdg-open "$URL" >/dev/null 2>&1 || true
-    elif command -v sensible-browser >/dev/null 2>&1; then
-        sensible-browser "$URL" >/dev/null 2>&1 || true
+
+# Helper function to open browser
+open_browser() {
+    echo "[*] Opening browser ($URL)..."
+    if [ "$OS" = "Darwin" ]; then
+        open "$URL" >/dev/null 2>&1 || true
+    elif [ "$OS" = "Linux" ]; then
+        if command -v xdg-open >/dev/null 2>&1; then
+            xdg-open "$URL" >/dev/null 2>&1 || true
+        elif command -v sensible-browser >/dev/null 2>&1; then
+            sensible-browser "$URL" >/dev/null 2>&1 || true
+        fi
+    fi
+}
+
+# ── 1. Check if Docker is available and running ──────────────────────
+USE_DOCKER=false
+
+if command -v docker >/dev/null 2>&1; then
+    if docker info >/dev/null 2>&1; then
+        USE_DOCKER=true
     fi
 fi
 
+if [ "$USE_DOCKER" = true ]; then
+    echo "[+] Docker detected and running!"
+    echo "[*] Automatically building environment and installing dependencies via Docker..."
+
+    if docker compose version >/dev/null 2>&1; then
+        COMPOSE_CMD="docker compose"
+    elif command -v docker-compose >/dev/null 2>&1; then
+        COMPOSE_CMD="docker-compose"
+    fi
+
+    $COMPOSE_CMD up --build -d
+    echo "[*] Waiting for web application to initialize..."
+    sleep 6
+    open_browser
+
+    echo ""
+    echo "==================================================="
+    echo "  VulnSuite is running in Docker mode!"
+    echo "  URL: $URL"
+    echo "  View live logs: $COMPOSE_CMD logs -f"
+    echo "  Stop lab:       $COMPOSE_CMD down"
+    echo "==================================================="
+    exit 0
+fi
+
+# ── 2. Native Fallback (Docker not active) ───────────────────────────
+echo "[!] Docker is not active. Using Native Automated Setup..."
 echo ""
-echo "========================================="
-echo "  Lab is ready at: $URL"
-echo "  To view live logs:  $COMPOSE_CMD logs -f"
-echo "  To stop the lab:    $COMPOSE_CMD down"
-echo "========================================="
+
+# Check for Python
+PY_CMD=""
+if command -v python3 >/dev/null 2>&1; then
+    PY_CMD="python3"
+elif command -v python >/dev/null 2>&1; then
+    PY_CMD="python"
+fi
+
+if [ -z "$PY_CMD" ]; then
+    echo "[!] Neither Docker nor Python was found on your system."
+    echo "[!] Please install Docker Desktop or Python 3.11+."
+    exit 1
+fi
+
+echo "[*] Python detected: $PY_CMD"
+
+# Setup virtual environment
+if [ ! -d ".venv" ]; then
+    echo "[*] Creating virtual environment (.venv)..."
+    $PY_CMD -m venv .venv
+fi
+
+# Activate virtual environment
+source .venv/bin/activate
+
+echo "[*] Automatically downloading and installing all Python requirements..."
+pip install --quiet --upgrade pip
+pip install --quiet -r backend/requirements.txt
+
+echo "[*] Initializing database and pre-configuring seed accounts..."
+DATABASE="backend/LabDatabase.db" python seed/seed.py
+
+# Check Node.js for the internal API microservice
+if command -v npm >/dev/null 2>&1 && command -v node >/dev/null 2>&1; then
+    echo "[*] Node.js detected. Automatically installing internal-api requirements..."
+    npm install --prefix internal-api --silent
+    echo "[*] Starting internal API service in background..."
+    node internal-api/server.js >/dev/null 2>&1 &
+fi
+
+# Start Flask backend on port 9999
+echo "[*] Starting VulnSuite portal on $URL..."
+PORT=9999 DATABASE="backend/LabDatabase.db" python backend/app.py &
+BACKEND_PID=$!
+
+sleep 3
+open_browser
+
+echo ""
+echo "==================================================="
+echo "  VulnSuite is running in Native Python mode!"
+echo "  URL: $URL"
+echo "  Press Ctrl+C to stop the server."
+echo "==================================================="
+
+# Wait on backend process
+wait $BACKEND_PID
