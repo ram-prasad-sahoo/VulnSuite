@@ -2,9 +2,9 @@
   <img src="logo.svg" alt="VulnSuite Logo" width="120" height="120" />
 </p>
 
-<h1 align="center">VulnSuite — Enterprise Operations Platform</h1>
+<h1 align="center">VulnSuite</h1>
 <p align="center">
-  <b>A Deliberately Vulnerable Enterprise Application for Security Assessments & Penetration Testing</b>
+  <b>A Deliberately Vulnerable Web & API Security Lab</b>
 </p>
 
 <p align="center">
@@ -86,7 +86,7 @@ The test environment includes pre-configured user accounts covering multiple per
 | `alice` | `Password123!` | `user` | Product Team |
 | `bob` | `Password123!` | `user` | Engineering Lead |
 | `carol` | `Password123!` | `user` | Finance Analyst |
-| `dave` | `Password123!` | `user` | Enterprise Sales |
+| `dave` | `Password123!` | `user` | Sales Lead |
 | `eve` | `Password123!` | `user` | New Onboarding |
 | `support_admin` | `Admin@Shadow1` | `support-admin` | Support Tier Administration |
 | `superadmin` | `Super@Shadow1` | `super-admin` | Full System Authority |

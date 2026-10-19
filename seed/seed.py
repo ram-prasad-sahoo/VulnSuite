@@ -52,7 +52,7 @@ INVOICES = [
     ("carol", 2100.00,  "Financial Modelling — Series B",        "paid"),
     ("carol", 750.00,   "Expense Reimbursement — Q3",           "overdue"),
     ("carol", 5600.00,  "Investor Relations Package",            "paid"),
-    ("dave",  8200.00,  "Enterprise Sales Contract — Nexus",     "paid"),
+    ("dave",  8200.00,  "Corporate Sales Contract — Nexus",     "paid"),
     ("dave",  4100.00,  "Demo Environment Setup",                "pending"),
     ("eve",   320.00,   "Onboarding Kit",                        "paid"),
     ("support_admin", 0.00, "Internal account — no billing",    "paid"),
