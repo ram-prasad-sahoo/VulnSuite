@@ -1,5 +1,5 @@
 """
-Shadow Corp — Main Flask Application Entry Point
+VulnSuite — Main Flask Application Entry Point
 =================================================
 ⚠️  EDUCATIONAL USE ONLY — deliberately vulnerable.
     Do NOT deploy outside an isolated lab network.

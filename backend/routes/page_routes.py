@@ -1,5 +1,5 @@
 """
-Shadow Corp — Page / LFI / RCE Routes
+VulnSuite — Page / LFI / RCE Routes
 =======================================
 Handles: /pages/render
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Shadow Corp — Database Seed Script
+VulnSuite — Database Seed Script
 ====================================
 Creates:
   - 5 normal users (alice, bob, carol, dave, eve)
@@ -27,19 +27,19 @@ def hash_password(plaintext: str) -> str:
 
 USERS = [
     # (username, email, password, role, bio)
-    ("alice",         "alice@shadowcorp.com",   "Password123!", "user",
-     "Hi, I'm Alice. I manage the product roadmap here at Shadow Corp."),
-    ("bob",           "bob@shadowcorp.com",     "Password123!", "user",
-     "Bob here — lead engineer on the Shadow Platform. Coffee enthusiast."),
-    ("carol",         "carol@shadowcorp.com",   "Password123!", "user",
+    ("alice",         "alice@vulnsuite.com",   "Password123!", "user",
+     "Hi, I'm Alice. I manage the product roadmap here at VulnSuite."),
+    ("bob",           "bob@vulnsuite.com",     "Password123!", "user",
+     "Bob here — lead engineer on the VulnSuite Platform. Coffee enthusiast."),
+    ("carol",         "carol@vulnsuite.com",   "Password123!", "user",
      "Carol — finance analyst. Ask me about Q3 projections."),
-    ("dave",          "dave@shadowcorp.com",    "Password123!", "user",
+    ("dave",          "dave@vulnsuite.com",    "Password123!", "user",
      "David Chen, Head of Sales. Always closing."),
-    ("eve",           "eve@shadowcorp.com",     "Password123!", "user",
+    ("eve",           "eve@vulnsuite.com",     "Password123!", "user",
      "Eve — new here. Still getting set up!"),
-    ("support_admin", "support@shadowcorp.com", "Admin@Shadow1", "support-admin",
+    ("support_admin", "support@vulnsuite.com", "Admin@Shadow1", "support-admin",
      "Support admin account. Internal use only."),
-    ("superadmin",    "admin@shadowcorp.com",   "Super@Shadow1", "super-admin",
+    ("superadmin",    "admin@vulnsuite.com",   "Super@Shadow1", "super-admin",
      "Super administrator. Full system access."),
 ]
 

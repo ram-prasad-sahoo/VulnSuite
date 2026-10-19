@@ -1,5 +1,5 @@
 """
-Shadow Corp — Invoice Routes
+VulnSuite — Invoice Routes
 =============================
 Handles: /invoice/<id>, /invoices
 

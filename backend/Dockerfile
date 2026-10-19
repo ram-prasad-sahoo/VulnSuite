@@ -1,4 +1,4 @@
-# Shadow Corp Backend — Python/Flask
+# VulnSuite Backend — Python/Flask
 FROM python:3.11-slim
 
 WORKDIR /app

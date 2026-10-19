@@ -1,5 +1,5 @@
 """
-Shadow Corp — Lightweight Input Filter ("WAF-lite")
+VulnSuite — Lightweight Input Filter ("WAF-lite")
 ====================================================
 A simple perimeter content filter applied to the profile bio field.
 

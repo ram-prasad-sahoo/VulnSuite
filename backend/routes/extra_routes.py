@@ -1,5 +1,5 @@
 """
-Shadow Corp — Bonus Track Routes
+VulnSuite — Bonus Track Routes
 =================================
 Handles: /invoices/search (SQLi), /api/profile (Mass Assignment),
          /admin/restore-backup (Insecure Deserialization → RCE #2),
@@ -213,14 +213,14 @@ def restore_backup():
         blob_b64 = request.form.get("backup_blob", "").strip()
         if blob_b64:
             if current_app.config["VULN_DESERIALIZATION"]:
-                # "Security" check: require SHADOWCORP: header prefix
-                # STILL VULNERABLE: just prepend "SHADOWCORP:" to payload
-                if not blob_b64.startswith("SHADOWCORP:"):
+                # "Security" check: require VULNSUITE: header prefix
+                # STILL VULNERABLE: just prepend "VULNSUITE:" to payload
+                if not blob_b64.startswith("VULNSUITE:"):
                     error = ("Invalid backup format — blob must begin with "
-                             "the SHADOWCORP: header prefix.")
+                             "the VULNSUITE: header prefix.")
                 else:
                     try:
-                        raw     = base64.b64decode(blob_b64[len("SHADOWCORP:"):])
+                        raw     = base64.b64decode(blob_b64[len("VULNSUITE:"):])
                         restored = pickle.loads(raw)
                         result  = f"Backup restored: {restored!r}"
                     except Exception as e:

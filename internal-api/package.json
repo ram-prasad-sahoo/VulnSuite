@@ -1,7 +1,7 @@
 {
-  "name": "shadowcorp-internal-api",
+  "name": "vulnsuite-internal-api",
   "version": "1.0.0",
-  "description": "Shadow Corp internal admin API — SSRF target for cybersecurity lab",
+  "description": "VulnSuite internal admin API — SSRF target for cybersecurity lab",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

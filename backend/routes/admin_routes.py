@@ -1,5 +1,5 @@
 """
-Shadow Corp — Admin Routes
+VulnSuite — Admin Routes
 ===========================
 Handles: /admin (dashboard), /admin/users, /admin/promote-user,
          /admin/change-email, /admin/settings

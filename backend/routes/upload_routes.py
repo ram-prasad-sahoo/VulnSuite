@@ -1,5 +1,5 @@
 """
-Shadow Corp — File Upload Routes (RCE via File Upload)
+VulnSuite — File Upload Routes (RCE via File Upload)
 =======================================================
 Handles: /admin/upload-report
 

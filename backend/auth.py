@@ -1,5 +1,5 @@
 """
-Shadow Corp — Authentication helpers
+VulnSuite — Authentication helpers
 """
 
 import hashlib

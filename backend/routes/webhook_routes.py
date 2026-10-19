@@ -1,5 +1,5 @@
 """
-Shadow Corp — Webhook / URL Fetch Routes (SSRF)
+VulnSuite — Webhook / URL Fetch Routes (SSRF)
 ================================================
 Handles: /admin/webhook-test, /admin/import-logo
 

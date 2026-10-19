@@ -1,5 +1,5 @@
 """
-Shadow Corp — Database Helpers
+VulnSuite — Database Helpers
 """
 
 import sqlite3

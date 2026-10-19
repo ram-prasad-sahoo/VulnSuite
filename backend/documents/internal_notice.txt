@@ -1,4 +1,4 @@
-Shadow Corp — Internal System Notice
+VulnSuite — Internal System Notice
 =====================================
 CONFIDENTIAL — DO NOT DISTRIBUTE
 
@@ -7,7 +7,7 @@ Log file location: /app/logs/access.log
 Config file:       /app/config.py
 
 Admin contacts:
-  superadmin@shadowcorp.internal — super-admin account
-  support@shadowcorp.internal    — support-admin account
+  superadmin@vulnsuite.internal — super-admin account
+  support@vulnsuite.internal    — support-admin account
 
 Internal microservice: http://internal-api:3000

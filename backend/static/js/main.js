@@ -1,4 +1,4 @@
-/* Shadow Corp — Main JS (minimal) */
+/* VulnSuite — Main JS (minimal) */
 "use strict";
 
 // Auto-dismiss flash messages after 5 seconds

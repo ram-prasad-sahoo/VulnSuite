@@ -1,5 +1,5 @@
 /**
- * Shadow Corp — Internal Admin API (Node.js / Express)
+ * VulnSuite — Internal Admin API (Node.js / Express)
  * ======================================================
  * This microservice simulates a private internal API that should NEVER
  * be reachable from the public internet — only accessible within the
@@ -18,7 +18,7 @@ const app = express();
 
 app.get('/', (req, res) => {
   res.json({
-    service: 'ShadowCorp Internal Admin API',
+    service: 'VulnSuite Internal Admin API',
     version: '1.0.0',
     endpoints: [
       'GET /admin/secret',
@@ -38,11 +38,11 @@ app.get('/health', (req, res) => {
 app.get('/admin/secret', (req, res) => {
   res.json({
     WARNING: 'SSRF SUCCESSFUL — you reached the internal admin API!',
-    internal_token:    'sk-internal-shadowcorp-a7f3b91c2d04e5f6',
+    internal_token:    'sk-internal-vulnsuite-a7f3b91c2d04e5f6',
     db_password:       'Pr0d-DB-P@ss!2025',
-    jwt_secret:        'shadow-corp-insecure-dev-key-DO-NOT-USE',
+    jwt_secret:        'vulnsuite-insecure-dev-key-DO-NOT-USE',
     internal_api_base: 'http://internal-api:3000',
-    admin_email:       'admin@shadowcorp.com',
+    admin_email:       'admin@vulnsuite.com',
     notes: 'This would typically expose cloud metadata, internal tokens, or service credentials.',
   });
 });
@@ -60,7 +60,7 @@ app.get('/admin/users', (req, res) => {
 app.get('/admin/config', (req, res) => {
   res.json({
     WARNING: 'Internal config dump — only accessible via SSRF',
-    flask_secret:   'shadow-corp-insecure-dev-key-DO-NOT-USE',
+    flask_secret:   'vulnsuite-insecure-dev-key-DO-NOT-USE',
     database:       'LabDatabase.db',
     debug:          true,
     smtp_password:  'smtp-p4ssw0rd-internal',

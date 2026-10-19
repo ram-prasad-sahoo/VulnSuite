@@ -1,5 +1,5 @@
 """
-Shadow Corp — Authentication Routes
+VulnSuite — Authentication Routes
 ====================================
 Handles: /register, /login, /logout
 

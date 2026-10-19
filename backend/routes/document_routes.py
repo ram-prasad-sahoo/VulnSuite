@@ -1,5 +1,5 @@
 """
-Shadow Corp — Document / Path Traversal Routes
+VulnSuite — Document / Path Traversal Routes
 ===============================================
 Handles: /documents/view
 

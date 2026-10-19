@@ -1,5 +1,5 @@
 """
-Shadow Corp — Profile Routes
+VulnSuite — Profile Routes
 =============================
 Handles: /dashboard, /profile/<username>, /profile/edit
 

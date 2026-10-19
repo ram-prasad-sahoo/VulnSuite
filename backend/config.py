@@ -1,5 +1,5 @@
 """
-Shadow Corp — Vulnerability Configuration
+VulnSuite — Vulnerability Configuration
 ==========================================
 Each VULN_* flag enables/disables a specific vulnerability.
 Set to True  → vulnerable (demo attack)
@@ -22,7 +22,7 @@ def _bool(env_key: str, default: bool) -> bool:
 
 class Config:
     # ── Flask core ──────────────────────────────────────────────────────────
-    SECRET_KEY = os.environ.get("SECRET_KEY", "shadow-corp-insecure-dev-key-DO-NOT-USE")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "vulnsuite-insecure-dev-key-DO-NOT-USE")
     DATABASE    = os.environ.get("DATABASE", "LabDatabase.db")
     DEBUG       = _bool("FLASK_DEBUG", True)
 

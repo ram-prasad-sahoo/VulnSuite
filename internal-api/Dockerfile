@@ -1,4 +1,4 @@
-# Shadow Corp Internal API — Node.js
+# VulnSuite Internal API — Node.js
 FROM node:20-alpine
 
 WORKDIR /app
