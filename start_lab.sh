@@ -30,7 +30,42 @@ open_browser() {
     fi
 }
 
-# ── 1. Check if Docker is available and running ──────────────────────
+# ── 0. Automatic Update Check from GitHub ────────────
+if command -v git >/dev/null 2>&1 && [ -d ".git" ]; then
+    if git remote get-url origin >/dev/null 2>&1; then
+        echo "[*] Checking for updates from GitHub..."
+        if git fetch origin --quiet 2>/dev/null; then
+            LOCAL_COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "")
+            REMOTE_COMMIT=$(git rev-parse @{u} 2>/dev/null || echo "")
+
+            if [ -n "$REMOTE_COMMIT" ] && [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ]; then
+                echo ""
+                echo "==================================================="
+                echo "  [!] A new version of VulnSuite is available!     "
+                echo "==================================================="
+                read -p "  Do you want to download and update now? (y/n): " UPDATE_CHOICE
+                case "$UPDATE_CHOICE" in
+                    y|Y )
+                        echo "[*] Downloading latest updates from GitHub..."
+                        git pull --quiet
+                        echo "[+] Updated successfully to the latest version!"
+                        echo ""
+                        ;;
+                    * )
+                        echo "[*] Skipping update. Continuing with installed version..."
+                        echo ""
+                        ;;
+                esac
+            else
+                echo "[+] VulnSuite is up to date."
+            fi
+        else
+            echo "[*] Offline or cannot connect to GitHub. Continuing with local version..."
+        fi
+    fi
+fi
+
+# ── 1. Check if Docker is available and running ──────
 USE_DOCKER=false
 
 if command -v docker >/dev/null 2>&1; then
@@ -64,7 +99,7 @@ if [ "$USE_DOCKER" = true ]; then
     exit 0
 fi
 
-# ── 2. Native Fallback (Docker not active) ───────────────────────────
+# ── 2. Native Fallback (Docker not active) ───────────
 echo "[!] Docker is not active. Using Native Automated Setup..."
 echo ""
 
