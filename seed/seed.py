@@ -118,6 +118,11 @@ def seed(db_path: str):
     c.execute("DELETE FROM users")
     c.execute("DELETE FROM audit_log")
     c.execute("DELETE FROM discount_codes")
+    c.execute("DELETE FROM sessions")
+    try:
+        c.execute("DELETE FROM sqlite_sequence WHERE name IN ('users', 'invoices', 'audit_log', 'discount_codes', 'sessions')")
+    except sqlite3.OperationalError:
+        pass
     conn.commit()
 
     # Insert users

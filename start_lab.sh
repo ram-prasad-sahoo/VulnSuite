@@ -65,7 +65,20 @@ if command -v git >/dev/null 2>&1 && [ -d ".git" ]; then
     fi
 fi
 
-# ── 1. Check if Docker is available and running ──────
+# ── 1. Clean up any existing zombie processes on ports 9999 and 3000 ─
+if command -v lsof >/dev/null 2>&1; then
+    PID_9999=$(lsof -ti:9999 2>/dev/null || true)
+    if [ -n "$PID_9999" ]; then
+        echo "[*] Port 9999 is currently busy. Releasing port (PID: $PID_9999)..."
+        kill -9 $PID_9999 2>/dev/null || true
+    fi
+    PID_3000=$(lsof -ti:3000 2>/dev/null || true)
+    if [ -n "$PID_3000" ]; then
+        kill -9 $PID_3000 2>/dev/null || true
+    fi
+fi
+
+# ── 2. Check if Docker is available and running ──────
 USE_DOCKER=false
 
 if command -v docker >/dev/null 2>&1; then
@@ -84,79 +97,110 @@ if [ "$USE_DOCKER" = true ]; then
         COMPOSE_CMD="docker-compose"
     fi
 
-    $COMPOSE_CMD up --build -d
-    echo "[*] Waiting for web application to initialize..."
-    sleep 6
-    open_browser
+    echo "[*] Launching containers and streaming live server logs..."
+    (sleep 6 && open_browser) &
 
     echo ""
     echo "==================================================="
-    echo "  VulnSuite is running in Docker mode!"
+    echo "  VulnSuite Server Running (Docker Mode)"
     echo "  URL: $URL"
-    echo "  View live logs: $COMPOSE_CMD logs -f"
-    echo "  Stop lab:       $COMPOSE_CMD down"
+    echo "  Streaming live HTTP requests and responses below..."
+    echo "  Press Ctrl+C to stop the server."
     echo "==================================================="
+    echo ""
+
+    $COMPOSE_CMD up --build
     exit 0
 fi
 
-# ── 2. Native Fallback (Docker not active) ───────────
+# ── 3. Native Fallback (Docker not active) ───────────
 echo "[!] Docker is not active. Using Native Automated Setup..."
 echo ""
 
-# Check for Python
+# Detect Python 3 reliably
 PY_CMD=""
 if command -v python3 >/dev/null 2>&1; then
-    PY_CMD="python3"
-elif command -v python >/dev/null 2>&1; then
-    PY_CMD="python"
+    if python3 -c "import sys; sys.exit(0 if sys.version_info[0] == 3 else 1)" 2>/dev/null; then
+        PY_CMD="python3"
+    fi
+fi
+
+if [ -z "$PY_CMD" ] && command -v python >/dev/null 2>&1; then
+    if python -c "import sys; sys.exit(0 if sys.version_info[0] == 3 else 1)" 2>/dev/null; then
+        PY_CMD="python"
+    fi
 fi
 
 if [ -z "$PY_CMD" ]; then
-    echo "[!] Neither Docker nor Python was found on your system."
-    echo "[!] Please install Docker Desktop or Python 3.11+."
+    echo "==================================================="
+    echo "[!] ERROR: Python 3 was not found on your system!"
+    echo "[!] VulnSuite requires Python 3.10, 3.11, or 3.12."
+    echo "[!] Please install Python 3 or Docker Desktop."
+    echo "==================================================="
     exit 1
 fi
 
-echo "[*] Python detected: $PY_CMD"
+echo "[*] Python 3 detected: $PY_CMD"
 
-# Setup virtual environment
-if [ ! -d ".venv" ]; then
-    echo "[*] Creating virtual environment (.venv)..."
-    $PY_CMD -m venv .venv
+# Verify or create virtual environment
+REBUILD_VENV=false
+if [ ! -f ".venv/bin/python" ]; then
+    REBUILD_VENV=true
+else
+    if ! .venv/bin/python -c "import sys; sys.exit(0 if sys.version_info[0] == 3 else 1)" 2>/dev/null; then
+        echo "[*] Existing virtual environment is incompatible. Rebuilding..."
+        rm -rf .venv
+        REBUILD_VENV=true
+    fi
 fi
 
-# Activate virtual environment
-source .venv/bin/activate
+if [ "$REBUILD_VENV" = true ]; then
+    echo "[*] Creating virtual environment (.venv)..."
+    if ! $PY_CMD -m venv .venv 2>/dev/null; then
+        echo "[!] Failed to create .venv. Falling back to system python."
+        RUN_PY="$PY_CMD"
+    else
+        RUN_PY=".venv/bin/python"
+    fi
+else
+    RUN_PY=".venv/bin/python"
+fi
 
-echo "[*] Automatically downloading and installing all Python requirements..."
-pip install --quiet --upgrade pip
-pip install --quiet -r backend/requirements.txt
+# Install Python requirements
+echo "[*] Checking and installing Python dependencies..."
+"$RUN_PY" -m pip install --quiet --upgrade pip 2>/dev/null || true
+"$RUN_PY" -m pip install --quiet -r backend/requirements.txt || {
+    echo "[!] Warning: Some dependencies could not be downloaded."
+    echo "[*] Attempting to continue with installed packages..."
+}
 
 echo "[*] Initializing database and pre-configuring seed accounts..."
-DATABASE="backend/LabDatabase.db" python seed/seed.py
+DATABASE="backend/LabDatabase.db" "$RUN_PY" seed/seed.py >/dev/null 2>&1
 
 # Check Node.js for the internal API microservice
 if command -v npm >/dev/null 2>&1 && command -v node >/dev/null 2>&1; then
-    echo "[*] Node.js detected. Automatically installing internal-api requirements..."
-    npm install --prefix internal-api --silent
+    if [ ! -d "internal-api/node_modules" ]; then
+        echo "[*] Installing internal-api microservice dependencies..."
+        npm install --prefix internal-api --silent >/dev/null 2>&1 || true
+    fi
     echo "[*] Starting internal API service in background..."
     node internal-api/server.js >/dev/null 2>&1 &
+else
+    echo "[*] Node.js not detected. Skipping internal microservice (Core Web Portal is fully operational)."
 fi
-
-# Start Flask backend on port 9999
-echo "[*] Starting VulnSuite portal on $URL..."
-PORT=9999 DATABASE="backend/LabDatabase.db" python backend/app.py &
-BACKEND_PID=$!
-
-sleep 3
-open_browser
 
 echo ""
 echo "==================================================="
-echo "  VulnSuite is running in Native Python mode!"
-echo "  URL: $URL"
-echo "  Press Ctrl+C to stop the server."
+echo "  VulnSuite Backend Server Ready!"
+echo "  Web Portal URL: $URL"
+echo "  All incoming HTTP requests and responses stream below:"
+echo "  Do NOT close this terminal. Press Ctrl+C to stop."
 echo "==================================================="
+echo ""
 
-# Wait on backend process
-wait $BACKEND_PID
+(sleep 3 && open_browser) &
+
+# Run Flask backend in foreground so terminal stays active and shows all requests/responses
+PORT=9999 DATABASE="backend/LabDatabase.db" "$RUN_PY" backend/app.py
+
+

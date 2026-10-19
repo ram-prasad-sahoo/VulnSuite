@@ -91,11 +91,11 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    # threaded=True matters for the Bonus Track race-condition challenge
-    # (/invoice/<id>/redeem): a single-threaded dev server would serialize
-    # concurrent requests itself and mask the bug. SQLite's own locking
-    # still means requests can block each other briefly, but with
-    # threaded=True + the deliberate time.sleep() in the vulnerable branch,
-    # the check-then-act window is wide enough that firing ~15-20
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 9999))
+    print("\n===================================================")
+    print("  VulnSuite Backend Server Ready")
+    print(f"  Listening on: http://localhost:{port}")
+    print("  Streaming live HTTP requests & responses below...")
+    print("===================================================\n")
     app.run(host="0.0.0.0", port=port, debug=app.config["DEBUG"], threaded=True)
+

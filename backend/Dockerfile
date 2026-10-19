@@ -16,4 +16,4 @@ RUN mkdir -p logs documents pages
 # Entrypoint: seed the DB if it doesn't exist, then launch Flask
 CMD ["sh", "-c", "python /seed/seed.py && python app.py"]
 
-EXPOSE 5000
+EXPOSE 9999

@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+.jython_cache/
 
 # Node dependencies (internal-api)
 node_modules/

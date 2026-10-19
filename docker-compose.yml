@@ -15,27 +15,30 @@
 #   e.g. VULN_XSS=false docker-compose up
 # ═══════════════════════════════════════════════════════════════════════════
 
+name: vulnsuite
+
 networks:
-  lab-net:
+  vulnsuite-net:
     driver: bridge
-    # Isolated internal network — no external routing for internal-api
-    internal: false   # backend needs internet for demo requests; use compose isolation instead
+    internal: false
 
 services:
 
   # ── Flask Backend ──────────────────────────────────────────────────────────
   backend:
+    image: vulnsuite-backend:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: vulnsuite-backend
     restart: unless-stopped
     ports:
-      - "9999:5000"           # Exposed to host for classroom access
+      - "9999:9999"           # Exposed to host for classroom access
     volumes:
       - ./backend:/app        # Live-reload during lab — source mounted
       - ./seed:/seed          # Seed script accessible at /seed/seed.py
     environment:
+      PORT: "9999"
       FLASK_DEBUG: "true"
       SECRET_KEY: "vulnsuite-insecure-dev-key-DO-NOT-USE"
       DATABASE: "/app/LabDatabase.db"
@@ -53,22 +56,19 @@ services:
       VULN_LFI:            "${VULN_LFI:-true}"
       VULN_RCE:            "${VULN_RCE:-true}"
     networks:
-      - lab-net
-      - default
+      - vulnsuite-net
     depends_on:
       - internal-api
 
   # ── Internal Admin API (SSRF Target) ──────────────────────────────────────
   internal-api:
+    image: vulnsuite-internal-api:latest
     build:
       context: ./internal-api
       dockerfile: Dockerfile
     container_name: vulnsuite-internal-api
     restart: unless-stopped
-    # ⚠ NO ports: mapping — this service is intentionally NOT exposed to host.
-    # It is only reachable via the Docker internal network (by the backend
-    # when VULN_SSRF=true and a student supplies http://internal-api:3000/...).
     networks:
-      - lab-net
+      - vulnsuite-net
     environment:
       PORT: "3000"
