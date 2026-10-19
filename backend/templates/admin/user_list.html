@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Manage Users</h1>
+    <p class="page-sub">Admin — user account management</p>
+  </div>
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost btn-sm">← Admin</a>
+</div>
+
+{% if config.VULN_CSRF %}
+
+{% else %}
+
+{% endif %}
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Username</th><th>Email</th><th>Role</th><th>Change Email</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="td-id">{{ u['id'] }}</td>
+          <td><a href="{{ url_for('profile.view_profile', username=u['username']) }}">{{ u['username'] }}</a></td>
+          <td class="mono" style="font-size:0.82rem;">{{ u['email'] }}</td>
+          <td><span class="role-badge role-{{ u['role'] | replace('-','_') }}">{{ u['role'] }}</span></td>
+          <td>
+            
+            <form method="POST" action="{{ url_for('admin.change_email') }}"
+                  style="display:inline-flex;gap:0.4rem;align-items:center;">
+              {% if not config.VULN_CSRF %}
+              
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+              {% endif %}
+              
+              <input type="hidden" name="user_id" value="{{ u['id'] }}" />
+              <input type="email" name="email" placeholder="new@email.com"
+                     style="width:180px;padding:0.3rem 0.6rem;font-size:0.82rem;" />
+              <button type="submit" class="btn btn-sm btn-danger">Update</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

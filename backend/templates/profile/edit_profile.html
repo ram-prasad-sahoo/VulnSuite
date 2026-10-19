@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<div style="max-width:600px;margin:0 auto;">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Edit Profile</h1>
+      <p class="page-sub">Update your account details</p>
+    </div>
+  </div>
+
+  {% if config.VULN_XSS %}
+  
+  {% endif %}
+
+  {% if config.VULN_CSRF %}
+  
+  {% endif %}
+
+  <div class="card">
+    <form method="POST" action="{{ url_for('profile.edit_profile') }}">
+      {% if not config.VULN_CSRF %}
+      
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      {% endif %}
+      
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ me['email'] }}" required />
+      </div>
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" rows="5"
+          placeholder="Write a short bio for your profile…">{{ me['bio'] or '' }}</textarea>
+      </div>
+      <div class="form-group">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" value="{{ me['website'] or '' }}"
+               placeholder="https://your-site.example" />
+      </div>
+      {% if bio_error %}
+      <p class="form-hint"><span class="text-red">{{ bio_error }}</span></p>
+      {% endif %}
+
+      <div class="flex gap-1" style="justify-content:flex-end;">
+        <a href="{{ url_for('profile.dashboard') }}" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

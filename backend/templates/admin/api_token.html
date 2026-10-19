@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}API Token{% endblock %}
+{% block content %}
+<div style="max-width:720px;margin:0 auto;">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">🔑 Your API Token (JWT)</h1>
+      <p class="page-sub">Signed HS256 JSON Web Token</p>
+    </div>
+    <a href="{{ url_for('admin.settings') }}" class="btn btn-ghost btn-sm">← Settings</a>
+  </div>
+
+  {% if config.VULN_JWT %}
+  
+  {% else %}
+  
+  {% endif %}
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">Your Token</span></div>
+    <div class="response-box" id="jwt-token" style="color:var(--accent);word-break:break-all;">{{ token }}</div>
+    <button class="btn btn-ghost btn-sm mt-1"
+            onclick="navigator.clipboard.writeText(document.getElementById('jwt-token').textContent)">
+      Copy Token
+    </button>
+  </div>
+
+  <div class="card mt-2">
+    <div class="card-header"><span class="card-title">Decoded Payload (reference)</span></div>
+    <pre id="decoded-payload">Loading…</pre>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+try {
+  const token = document.getElementById("jwt-token").textContent.trim();
+  const parts = token.split(".");
+  if (parts.length === 3) {
+    const pad = s => s + "=".repeat((4 - s.length % 4) % 4);
+    const payload = JSON.parse(atob(pad(parts[1].replace(/-/g,"+").replace(/_/g,"/"))));
+    document.getElementById("decoded-payload").textContent = JSON.stringify(payload, null, 2);
+  }
+} catch(e) { document.getElementById("decoded-payload").textContent = "Unable to decode."; }
+</script>
+{% endblock %}

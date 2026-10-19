@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Node dependencies (internal-api)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environments and secrets
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary and log files
+*.log
+backend/logs/*.log
+!backend/logs/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# SQLite database journals and temporary files
+*.db-journal
+*.db-wal
+*.db-shm

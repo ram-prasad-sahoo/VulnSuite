@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user['username'] }}'s Profile{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">{{ profile_user['username'] }}</h1>
+    <p class="page-sub">
+      <span class="role-badge role-{{ profile_user['role'] | replace('-','_') }}">
+        {{ profile_user['role'] }}
+      </span>
+      &nbsp; Member since {{ profile_user['created_at'][:10] if profile_user['created_at'] else '—' }}
+    </p>
+  </div>
+  {% if current_user and current_user.username == profile_user['username'] %}
+  <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-ghost btn-sm">Edit Profile</a>
+  {% endif %}
+</div>
+
+
+{% if vuln_xss %}
+
+{% else %}
+
+{% endif %}
+
+<div class="card">
+  <div class="card-header"><span class="card-title">Bio</span></div>
+  <div class="bio-box">
+    {% if vuln_xss %}
+    {# VULNERABLE: |safe bypasses Jinja2 auto-escaping — raw HTML injected #}
+    {{ bio_content | safe }}
+    {# FIXED would be: {{ bio_content }} with no |safe filter #}
+    {% else %}
+    {# FIXED: bio_content already HTML-escaped by Python html.escape() #}
+    {{ bio_content }}
+    {% endif %}
+  </div>
+</div>
+
+{% if website_content %}
+<div class="card mt-2">
+  <div class="card-header"><span class="card-title">Website</span></div>
+  <div class="bio-box">
+    {% if vuln_xss %}
+    {# VULNERABLE: href built from raw stored text — scheme never validated.
+       Entity references inside this attribute value are decoded by the
+       BROWSER as part of normal attribute parsing, independent of anything
+       on the server side. #}
+    <a href="{{ website_content | safe }}">{{ profile_user['website'] }}</a>
+    {% else %}
+    {# FIXED: html.escape() already applied in profile_routes.py #}
+    <a href="{{ website_content }}" target="_blank" rel="noopener">{{ website_content }}</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="card mt-2">
+  <div class="card-header"><span class="card-title">Account Info</span></div>
+  <table>
+    <tbody>
+      <tr><td style="width:140px;color:var(--text-muted);">User ID</td>
+          <td class="mono">#{{ profile_user['id'] }}</td></tr>
+      <tr><td style="color:var(--text-muted);">Username</td>
+          <td>{{ profile_user['username'] }}</td></tr>
+      <tr><td style="color:var(--text-muted);">Role</td>
+          <td><span class="role-badge role-{{ profile_user['role'] | replace('-','_') }}">{{ profile_user['role'] }}</span></td></tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

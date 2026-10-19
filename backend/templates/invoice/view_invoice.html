@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Invoice #{{ invoice['id'] }}{% endblock %}
+{% block content %}
+<div style="max-width:720px;margin:0 auto;">
+
+  {% if config.VULN_IDOR %}
+  
+  {% else %}
+  
+  {% endif %}
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Invoice #{{ invoice['id'] }}</h1>
+      <p class="page-sub">Belongs to: <strong>{{ owner['username'] }}</strong> ({{ owner['email'] }})</p>
+    </div>
+    <span class="status-pill status-{{ invoice['status'] }}">{{ invoice['status'] }}</span>
+  </div>
+
+  <div class="card">
+    <table>
+      <tbody>
+        <tr>
+          <td style="width:160px;color:var(--text-muted);">Invoice ID</td>
+          <td class="mono">#{{ invoice['id'] }}</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-muted);">Owner User ID</td>
+          <td class="mono">
+            <a href="{{ url_for('invoice.view_user_record', user_id=invoice['user_id']) }}">
+              #{{ invoice['user_id'] }}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-muted);">Description</td>
+          <td>{{ invoice['description'] }}</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-muted);">Amount</td>
+          <td class="mono" style="color:var(--accent);">${{ "%.2f"|format(invoice['amount']) }}</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-muted);">Status</td>
+          <td><span class="status-pill status-{{ invoice['status'] }}">{{ invoice['status'] }}</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-muted);">Created</td>
+          <td class="text-muted" style="font-size:0.85rem;">{{ invoice['created_at'] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-2">
+    <a href="{{ url_for('invoice.my_invoices') }}" class="btn btn-ghost">← My Invoices</a>
+  </div>
+</div>
+{% endblock %}

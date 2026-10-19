@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Upload Incident Report{% endblock %}
+{% block content %}
+<div style="max-width:800px;margin:0 auto;">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">📄 Upload Incident Report</h1>
+      <p class="page-sub">Upload text-based incident reports for review. Files are scanned for malicious content.</p>
+    </div>
+  </div>
+
+  {% if error %}
+  <div class="flash flash-error" style="margin-bottom:1.5rem;">
+    <span class="flash-icon">✗</span>
+    {{ error }}
+  </div>
+  {% endif %}
+
+  <div class="card mb-3">
+    <div class="card-header">
+      <span class="card-title">Upload New Report</span>
+    </div>
+    <form method="POST" enctype="multipart/form-data" style="padding:1.5rem;">
+      <div style="margin-bottom:1rem;">
+        <label for="report_file" style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-muted);">
+          Select File
+        </label>
+        <input type="file" name="report_file" id="report_file"
+               accept=".txt,.csv,.log,.md"
+               style="display:block;width:100%;padding:0.75rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-card);color:var(--text-main);font-size:0.9rem;" />
+      </div>
+      <div style="margin-bottom:1rem;padding:0.75rem;background:rgba(99,102,241,0.08);border-radius:var(--radius);font-size:0.82rem;color:var(--text-muted);">
+        <strong>Security Policy:</strong>
+        <ul style="margin:0.5rem 0 0 1.2rem;padding:0;line-height:1.8;">
+          <li>Allowed formats: <code>.txt</code>, <code>.csv</code>, <code>.log</code>, <code>.md</code></li>
+          <li>Maximum file size: <strong>8 KB</strong></li>
+          <li>Files are scanned for malicious code patterns (Python imports, exec, eval, etc.)</li>
+          <li>File must start with a printable ASCII character</li>
+        </ul>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">
+        ⬆ Upload Report
+      </button>
+    </form>
+  </div>
+
+  {% if files %}
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Uploaded Reports ({{ files|length }})</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Filename</th>
+            <th>Path Hint</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in files %}
+          <tr>
+            <td class="td-id">{{ loop.index }}</td>
+            <td class="mono">{{ f }}</td>
+            <td class="text-muted" style="font-size:0.78rem;">
+              uploads/{{ f }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="card">
+    <p class="text-muted" style="padding:1.5rem;font-size:0.9rem;">No reports uploaded yet.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

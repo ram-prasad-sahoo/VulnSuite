@@ -1,0 +1,13 @@
+Shadow Corp — Internal System Notice
+=====================================
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+Database location: /app/LabDatabase.db
+Log file location: /app/logs/access.log
+Config file:       /app/config.py
+
+Admin contacts:
+  superadmin@shadowcorp.internal — super-admin account
+  support@shadowcorp.internal    — support-admin account
+
+Internal microservice: http://internal-api:3000

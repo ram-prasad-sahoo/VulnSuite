@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Promote Users{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">⬆ Promote / Demote Users</h1>
+    <p class="page-sub">Super-admin role management</p>
+  </div>
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost btn-sm">← Admin</a>
+</div>
+
+{% if vuln_bac %}
+
+{% else %}
+
+{% endif %}
+
+<div class="card" style="max-width:600px;">
+  <div class="card-header"><span class="card-title">Change User Role</span></div>
+  <form method="POST" action="{{ url_for('admin.promote_user') }}">
+    {% if not config.VULN_CSRF %}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    {% endif %}
+
+    <div class="form-group">
+      <label for="user_id">Target User</label>
+      <select name="user_id" id="user_id">
+        {% for u in users %}
+        <option value="{{ u['id'] }}">
+          #{{ u['id'] }} — {{ u['username'] }} (currently: {{ u['role'] }})
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="role">New Role</label>
+      <select name="role" id="role">
+        <option value="user">user</option>
+        <option value="support-admin">support-admin</option>
+        <option value="super-admin">super-admin</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Apply Role Change</button>
+  </form>
+</div>
+
+<div class="card mt-2">
+  <div class="card-header"><span class="card-title">Current Roles</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Username</th><th>Role</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="td-id">{{ u['id'] }}</td>
+          <td>{{ u['username'] }}</td>
+          <td><span class="role-badge role-{{ u['role'] | replace('-','_') }}">{{ u['role'] }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

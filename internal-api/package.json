@@ -1,0 +1,15 @@
+{
+  "name": "shadowcorp-internal-api",
+  "version": "1.0.0",
+  "description": "Shadow Corp internal admin API — SSRF target for cybersecurity lab",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

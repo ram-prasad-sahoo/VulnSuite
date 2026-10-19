@@ -1,0 +1,13 @@
+Shadow Corp — Q3 Invoice Report
+================================
+This document is confidential and intended for internal use only.
+
+Total Invoices:  47
+Total Revenue:   $128,450.00
+Outstanding:     $22,340.00
+Paid:            $106,110.00
+
+Top clients:
+  - Nexus Technologies:   $34,500
+  - Orbital Systems:      $28,200
+  - Redacted Corp:        $19,750

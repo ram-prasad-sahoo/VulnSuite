@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Verify Token{% endblock %}
+{% block content %}
+<div style="max-width:720px;margin:0 auto;">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">🔍 Verify API Token</h1>
+      <p class="page-sub">Paste a JWT to verify and decode</p>
+    </div>
+    <a href="{{ url_for('admin.settings') }}" class="btn btn-ghost btn-sm">← Settings</a>
+  </div>
+
+  {% if config.VULN_JWT %}
+  
+  {% else %}
+  
+  {% endif %}
+
+  <div class="card">
+    <form method="POST" action="{{ url_for('admin.verify_token') }}">
+      <div class="form-group">
+        <label for="token">JWT Token</label>
+        <textarea id="token" name="token" rows="4"
+                  placeholder="Paste your JWT here…"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Verify &amp; Decode</button>
+    </form>
+  </div>
+
+  {% if error %}
+  <div class="card mt-2" style="border-color:rgba(255,77,109,0.3);">
+    <div class="card-header"><span class="card-title text-red">Verification Failed</span></div>
+    <div class="response-box">{{ error }}</div>
+  </div>
+  {% endif %}
+
+  {% if result %}
+  <div class="card mt-2">
+    <div class="card-header"><span class="card-title text-green">✓ Token Accepted</span></div>
+    <pre>{{ result | tojson(indent=2) }}</pre>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

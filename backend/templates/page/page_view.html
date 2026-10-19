@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Page Renderer{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">📃 Page Renderer</h1>
+    <p class="page-sub">Dynamic content viewer</p>
+  </div>
+</div>
+
+{% if config.VULN_LFI %}
+
+{% else %}
+
+{% endif %}
+
+<div class="card mb-2">
+  <form method="GET" action="{{ url_for('page.render_page') }}"
+        style="display:flex;gap:0.5rem;">
+    <input type="text" name="page" value="{{ request.args.get('page','welcome') }}"
+           placeholder="page name or path…" style="flex:1;" />
+    <button type="submit" class="btn btn-primary">Load Page</button>
+  </form>
+</div>
+
+{% if config.VULN_LFI %}
+
+
+{% endif %}
+
+<div class="card">
+  <div class="card-header"><span class="card-title">Page: {{ request.args.get('page','welcome') }}</span></div>
+  <div style="padding:0.5rem 0;">
+    {{ content | safe if content is defined else '' }}
+  </div>
+</div>
+
+{% endblock %}

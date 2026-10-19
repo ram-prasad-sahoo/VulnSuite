@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}User Directory{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">User Directory</h1>
+    <p class="page-sub">All registered Shadow Corp accounts</p>
+  </div>
+</div>
+
+{% if config.VULN_IDOR %}
+
+{% endif %}
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Username</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="td-id">{{ u['id'] }}</td>
+          <td>
+            <a href="{{ url_for('profile.view_profile', username=u['username']) }}">
+              {{ u['username'] }}
+            </a>
+          </td>
+          <td><span class="role-badge role-{{ u['role'] | replace('-','_') }}">{{ u['role'] }}</span></td>
+          <td class="text-muted" style="font-size:0.85rem;">{{ u['created_at'][:10] if u['created_at'] else '—' }}</td>
+          <td>
+            <a href="{{ url_for('invoice.view_user_record', user_id=u['id']) }}"
+               class="btn btn-ghost btn-sm">View Record</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Admin Settings{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">⚙ Admin Settings</h1>
+    <p class="page-sub">System configuration</p>
+  </div>
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost btn-sm">← Admin</a>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Role Management</span></div>
+    <p class="text-muted mb-2" style="font-size:0.88rem;">
+      Promote or demote user roles. Only super-admins should reach this feature.
+    </p>
+    {% if vuln_bac %}
+    
+    {% endif %}
+    <a href="{{ url_for('admin.promote_user') }}" class="btn btn-primary">
+      Manage Roles ⬆
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">JWT API Tokens</span></div>
+    <p class="text-muted mb-2" style="font-size:0.88rem;">
+      Issue and verify signed JWT tokens for API access.
+    </p>
+    {% if config.VULN_JWT %}
+    
+    {% endif %}
+    <div class="flex gap-1">
+      <a href="{{ url_for('admin.api_token') }}"    class="btn btn-ghost">Get Token</a>
+      <a href="{{ url_for('admin.verify_token') }}" class="btn btn-ghost">Verify Token</a>
+    </div>
+  </div>
+
+  {% if current_user.role == 'super-admin' %}
+  <div class="card">
+    <div class="card-header"><span class="card-title">Legacy Backups</span></div>
+    <p class="text-muted mb-2" style="font-size:0.88rem;">
+      Restore a settings backup from the old pre-JSON export format.
+    </p>
+    <a href="{{ url_for('extra.restore_backup') }}" class="btn btn-ghost">
+      Restore Backup
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

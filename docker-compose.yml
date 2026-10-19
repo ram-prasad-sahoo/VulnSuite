@@ -1,0 +1,73 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Shadow Corp — Docker Compose
+# Spin up the entire lab with: docker-compose up --build
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# ⚠  EDUCATIONAL USE ONLY — deliberately vulnerable application.
+#    Do NOT expose to the internet. Local classroom use only.
+#
+# Services:
+#   backend      → Flask app on host:5000
+#   internal-api → Node.js secret API (internal network ONLY — no host port)
+#
+# Vulnerability toggles (all ON by default):
+#   Set any to "false" to show the fixed version.
+#   e.g. VULN_XSS=false docker-compose up
+# ═══════════════════════════════════════════════════════════════════════════
+
+networks:
+  lab-net:
+    driver: bridge
+    # Isolated internal network — no external routing for internal-api
+    internal: false   # backend needs internet for demo requests; use compose isolation instead
+
+services:
+
+  # ── Flask Backend ──────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shadowcorp-backend
+    restart: unless-stopped
+    ports:
+      - "9999:5000"           # Exposed to host for classroom access
+    volumes:
+      - ./backend:/app        # Live-reload during lab — source mounted
+      - ./seed:/seed          # Seed script accessible at /seed/seed.py
+    environment:
+      FLASK_DEBUG: "true"
+      SECRET_KEY: "shadow-corp-insecure-dev-key-DO-NOT-USE"
+      DATABASE: "/app/LabDatabase.db"
+      INTERNAL_API_URL: "http://internal-api:3000"
+
+      # ── Vulnerability toggles ──────────────────────────────────────────────
+      # Flip any to "false" to show the patched version live on stage
+      VULN_XSS:            "${VULN_XSS:-true}"
+      VULN_CSRF:           "${VULN_CSRF:-true}"
+      VULN_IDOR:           "${VULN_IDOR:-true}"
+      VULN_BAC:            "${VULN_BAC:-true}"
+      VULN_JWT:            "${VULN_JWT:-true}"
+      VULN_SSRF:           "${VULN_SSRF:-true}"
+      VULN_PATH_TRAVERSAL: "${VULN_PATH_TRAVERSAL:-true}"
+      VULN_LFI:            "${VULN_LFI:-true}"
+      VULN_RCE:            "${VULN_RCE:-true}"
+    networks:
+      - lab-net
+    depends_on:
+      - internal-api
+
+  # ── Internal Admin API (SSRF Target) ──────────────────────────────────────
+  internal-api:
+    build:
+      context: ./internal-api
+      dockerfile: Dockerfile
+    container_name: shadowcorp-internal-api
+    restart: unless-stopped
+    # ⚠ NO ports: mapping — this service is intentionally NOT exposed to host.
+    # It is only reachable via the Docker internal network (by the backend
+    # when VULN_SSRF=true and a student supplies http://internal-api:3000/...).
+    networks:
+      - lab-net
+    environment:
+      PORT: "3000"

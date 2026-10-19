@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}User Record #{{ target['id'] }}{% endblock %}
+{% block content %}
+
+{% if config.VULN_IDOR %}
+
+{% else %}
+
+{% endif %}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">User Record: {{ target['username'] }}</h1>
+    <p class="page-sub">Internal user data view — ID #{{ target['id'] }}</p>
+  </div>
+  <span class="role-badge role-{{ target['role'] | replace('-','_') }}">{{ target['role'] }}</span>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Account Details</span></div>
+    <table>
+      <tbody>
+        <tr><td style="color:var(--text-muted);width:130px;">ID</td>
+            <td class="mono">#{{ target['id'] }}</td></tr>
+        <tr><td style="color:var(--text-muted);">Username</td>
+            <td>{{ target['username'] }}</td></tr>
+        <tr><td style="color:var(--text-muted);">Email</td>
+            <td class="mono">{{ target['email'] }}</td></tr>
+        <tr><td style="color:var(--text-muted);">Role</td>
+            <td><span class="role-badge role-{{ target['role'] | replace('-','_') }}">{{ target['role'] }}</span></td></tr>
+        <tr><td style="color:var(--text-muted);">Created</td>
+            <td class="text-muted" style="font-size:0.85rem;">{{ target['created_at'] }}</td></tr>
+      </tbody>
+    </table>
+    <div class="form-group mt-2">
+      <label>Bio</label>
+      <div class="bio-box text-muted">{{ target['bio'] or 'No bio.' }}</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">Invoices ({{ invoices|length }})</span></div>
+    {% if invoices %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Description</th><th>Amount</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          {% for inv in invoices %}
+          <tr>
+            <td class="td-id">
+              <a href="{{ url_for('invoice.view_invoice', invoice_id=inv['id']) }}">#{{ inv['id'] }}</a>
+            </td>
+            <td>{{ inv['description'] }}</td>
+            <td class="mono">${{ "%.2f"|format(inv['amount']) }}</td>
+            <td><span class="status-pill status-{{ inv['status'] }}">{{ inv['status'] }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted" style="font-size:0.9rem;">No invoices.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="mt-2">
+  <a href="{{ url_for('profile.user_list') }}" class="btn btn-ghost">← User Directory</a>
+</div>
+{% endblock %}
